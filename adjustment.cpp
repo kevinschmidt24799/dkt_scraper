@@ -30,6 +30,10 @@ Adjustment::Adjustment(NameList const & previous, NameList const & current)
         ++prev_pos;
     }
 
+    if(sum_changes() != 0)
+    {
+        std::cout << (*this);
+    }
     assert(sum_changes()==0);
 }
 

@@ -22,6 +22,11 @@ NameList::NameList(std::string const & file_name)
     //int count = 0;
     std::ifstream input_stream {file_name};
     for (std::string temp; std::getline(input_stream, temp); ) {
+        while(exists(temp))
+        {
+            temp += "-copy";
+            std::cout << "Making new name: " << temp << '\n';
+        }
         leaderboard_.push_back(temp);
         //if(++count>=10) break;
     }

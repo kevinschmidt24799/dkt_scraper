@@ -26,6 +26,8 @@ int main()
         //std::cout << a;
     }
 
+    std::cout << wlr;
+
     return 0;
 }
 

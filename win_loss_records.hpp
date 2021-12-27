@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <ostream>
 
 struct Event
 {
@@ -17,9 +18,12 @@ struct Event
 
 struct Record
 {
+
     std::vector<Event> history_;
-    int wins_;
-    int losses_;
+    int wins_{0};
+    int losses_{0};
+
+    friend std::ostream &operator<<(std::ostream &os, const Record &record);
 };
 
 struct WinLossRecords
@@ -27,6 +31,8 @@ struct WinLossRecords
     std::map<std::string, Record> people_;
 
     void add_event(std::string const &name, std::string const &date, int change);
+
+    friend std::ostream &operator<<(std::ostream &os, const WinLossRecords &records);
 };
 
 

@@ -7,10 +7,15 @@
 
 #include <vector>
 #include <string>
-enum region{
+#include <array>
+
+enum class Region{
     AM, EU, AP, NONS
 };
-static std::string region_types[] =
+enum class Form{
+    STD, W, C, BG, M
+};
+static std::array<std::string,4> region_types
         {
                 "Americas",
                 "Europe",
@@ -18,26 +23,34 @@ static std::string region_types[] =
                 "Invalid or Not Standard"
         };
 
-struct point{
+static std::array<std::string,5> format_types
+        {
+                "Standard",
+                "Wild",
+                "Classic",
+                "Battlegrounds",
+                "Mercenaries"
+        };
+
+struct Point{
 
     int rank_;
     std::string name_;
-    friend std::ostream &operator<<(std::ostream& os, point const &c);
+    friend std::ostream &operator<<(std::ostream& os, Point const &c);
 };
 
-struct leaderboard{
-    leaderboard()
-    {
-        r_ = NONS;
-    }
-    std::vector<point> lb_;
-    region r_;
+struct Leaderboard{
+    Leaderboard(){};
+    std::vector<Point> lb_;
+    Region region_{Region::NONS};
+    Form format_{Form::STD};
     std::string time_;
-    friend std::ostream &operator<<(std::ostream& os, leaderboard const &l);
+    friend std::ostream &operator<<(std::ostream& os, Leaderboard const &l);
+    void save();
 };
 
 
-std::vector<point> extract(std::string const & data);
-region fill_lb(leaderboard &l, std::string const & data);
+std::vector<Point> extract(std::string const & data);
+Region fill_lb(Leaderboard &l, std::string const & data);
 
 #endif //SCRAPER_EXTRACT_HPP

@@ -5,46 +5,53 @@
 #include "extract.hpp"
 #include <regex>
 #include <iostream>
+#include <filesystem>
+#include <fstream>
 
-region fill_lb(leaderboard &l, std::string const & data)
+
+Region fill_lb(Leaderboard &l, std::string const & data)
 {
     std::string temp = data;
     std::smatch matches;
     std::regex am(R"regex(<div class="dropdown-trigger"><button aria-haspopup="true" aria-controls="dropdown-menu" class="button" type="button">([^<]+)<\/button><\/div>)regex");
     std::regex_search(temp, matches, am);
-    if(matches[1].str().substr(0,2)=="Am")
+
+    for (int i = 0; i < region_types.size(); i ++)
     {
-        l.r_ = AM;
-    }else if(matches[1].str().substr(0,2)=="Eu")
-    {
-        l.r_ = EU;
-    }else if(matches[1].str().substr(0,2)=="As")
-    {
-        l.r_ = AP;
+        if (matches[1].str() == region_types[i])
+        {
+            l.region_ = (Region)i;
+            break;
+        }
     }
+
     temp = matches.suffix();
+
     std::regex_search(temp, matches, am);
 
-    if(matches[1].str().substr(0,2)!="St"){
-        l.r_ = NONS;
-        return l.r_;
+    for (int i = 0; i < format_types.size(); i ++)
+    {
+        if (matches[1].str() == format_types[i])
+        {
+            l.format_ = (Form)i;
+            break;
+        }
     }
 
     std::regex_search(temp, matches, std::regex(R"regex(([^>]+)UTC)regex"));
 
     l.time_ = matches[1].str();
+    l.time_ = l.time_.substr(0, l.time_.size()-1);
 
-    if(l.r_ != NONS)
-    {
-        l.lb_ = extract(data);
-    }
-    return l.r_;
+    l.lb_ = extract(data);
+
+    return l.region_;
 }
 
-std::vector<point> extract(std::string const & data)
+std::vector<Point> extract(std::string const & data)
 {
     std::string temp = data;
-    std::vector<point> names;
+    std::vector<Point> names;
 
     // created using regex101
     std::regex re(R"regex(player-profile\/([^"]+)">)regex");
@@ -61,28 +68,59 @@ std::vector<point> extract(std::string const & data)
 //            std::cout << i<< ": " << matches[i] << '\n';
 //        }
 
-        names.push_back(point{rank++, matches[1]});
+        names.push_back(Point{rank++, matches[1]});
         temp = matches.suffix();
     }
     return names;
 }
 
-std::ostream &operator<<(std::ostream& os, point const &c)
+std::ostream &operator<<(std::ostream& os, Point const &c)
 {
     os << c.rank_ <<": " << c.name_;
     return os;
 }
 
-std::ostream &operator<<(std::ostream& os, leaderboard const &l)
+std::ostream &operator<<(std::ostream& os, Leaderboard const &l)
 {
-    os << "Region: " << region_types[l.r_] << " time: " << l.time_ << '\n';
+    os << "Region: " << region_types[(int)l.region_];
+    if(l.region_==Region::NONS) return os << '\n';
 
-    if(l.r_ == NONS) return os;
+    return os << " format: "<<format_types[(int)l.format_]<< " time: " << l.time_ << '\n';
 
-    for(point const & p : l.lb_)
+//    for(Point const & p : l.lb_)
+//    {
+//        os << p << '\n';
+//    }
+
+}
+
+
+
+void Leaderboard::save()
+{
+    std::string dir;
+    dir+=region_types[(int)region_];
+    dir+='/';
+    dir+=format_types[(int)format_];
+    std::filesystem::create_directories(dir);
+
+    dir+='/';
+    dir+=time_+".txt";
+
+    std::ofstream of(dir, std::ios::trunc);
+
+    for(Point const &p : lb_)
     {
-        //os << p << '\n';
+        of << p.name_ << "\n";
     }
 
-    return os;
 }
+
+
+
+
+
+
+
+
+

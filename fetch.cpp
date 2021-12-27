@@ -22,7 +22,7 @@ Fetch::~Fetch()
 }
 
 
-static size_t save_bytes(void *contents, size_t size, size_t nmemb, void *userp)
+size_t Fetch::save_bytes(void *contents, size_t size, size_t nmemb, void *userp)
 {
     auto realsize = size * nmemb;
     auto temp = (std::string *)userp;

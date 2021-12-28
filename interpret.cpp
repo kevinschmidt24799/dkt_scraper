@@ -28,6 +28,16 @@ int main()
 
     std::cout << wlr;
 
+    for(auto const & p : wlr.people_)
+    {
+        for(auto const & e : p.second.history_)
+        {
+            if(e.start_ < 200 && e.start_+e.change_ < 200 && e.change_ != 1){
+                std::cout << e.start_ << "---" << e.change_ << '\n';
+            }
+        }
+    }
+
     return 0;
 }
 

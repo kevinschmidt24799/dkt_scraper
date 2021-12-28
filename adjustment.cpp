@@ -111,7 +111,7 @@ void Adjustment::normalize(WinLossRecords &records)
     for(auto i = max_change(); i != movements_.end(); i = max_change())
     {
         std::cout << "sum: " << sum_changes() << '\n';
-        records.add_event(i->name_, current_time_, i->change_);
+        records.add_event(i->name_, current_time_, i-movements_.begin(),i->change_);
         step_back(i);
     }
     std::cout << "========================";

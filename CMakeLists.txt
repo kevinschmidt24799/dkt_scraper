@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 FIND_PACKAGE(CURL)
 
+add_compile_options(-Werror)
+
 add_executable(scraper main.cpp fetch.cpp fetch.hpp extract.cpp extract.hpp)
 target_link_libraries(scraper ${CURL_LIBRARIES})
 

@@ -5,14 +5,14 @@
 #include "win_loss_records.hpp"
 #include "iostream"
 
-void WinLossRecords::add_event(std::string const &name, std::string const &date, int change)
+void WinLossRecords::add_event(std::string const &name, std::string const &date, int start, int change)
 {
-    people_[name].history_.push_back({date, change});
+    people_[name].history_.push_back({date, start, change});
 
-    if(change > 0)
+    if(change > 1)
     {
         people_[name].wins_++;
-    }else{
+    }else if (change < -1){
         people_[name].losses_++;
     }
 

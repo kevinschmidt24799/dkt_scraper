@@ -13,6 +13,7 @@
 struct Event
 {
     std::string date_;
+    int start_;
     int change_;
 };
 
@@ -30,7 +31,7 @@ struct WinLossRecords
 {
     std::map<std::string, Record> people_;
 
-    void add_event(std::string const &name, std::string const &date, int change);
+    void add_event(std::string const &name, std::string const &date, int start, int change);
 
     friend std::ostream &operator<<(std::ostream &os, const WinLossRecords &records);
 };

@@ -82,10 +82,10 @@ std::ostream &operator<<(std::ostream& os, Point const &c)
 
 std::ostream &operator<<(std::ostream& os, Leaderboard const &l)
 {
-    os << "Region: " << region_types[(int)l.region_];
+    os << "Region: " << region_types[static_cast<int>(l.region_)];
     if(l.region_==Region::NONS) return os << '\n';
 
-    return os << " format: "<<format_types[(int)l.format_]<< " time: " << l.time_ << '\n';
+    return os << " format: "<<format_types[static_cast<int>(l.format_)]<< " time: " << l.time_ << '\n';
 
 //    for(Point const & p : l.lb_)
 //    {
@@ -99,9 +99,9 @@ std::ostream &operator<<(std::ostream& os, Leaderboard const &l)
 void Leaderboard::save()
 {
     std::string dir;
-    dir+=region_types[(int)region_];
+    dir+=region_types[static_cast<int>(region_)];
     dir+='/';
-    dir+=format_types[(int)format_];
+    dir+=format_types[static_cast<int>(format_)];
     std::filesystem::create_directories(dir);
 
     dir+='/';
